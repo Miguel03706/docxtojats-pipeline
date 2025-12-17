@@ -395,3 +395,9 @@ This tool is for testing purposes, it preprocess the document and uses **AnyStyl
 - Improve and update the Docker.
 
 - **Conquer the world!** 🌍
+
+<p style="background:white">
+     <img src="doc/partners/logo-ministerio.svg" width="200">
+      <img src="doc/partners/logo-fecyt.svg" width="200">
+       <img src="doc/partners/convocatoria-mdg.svg" width="200">
+</p>
