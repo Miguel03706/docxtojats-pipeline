@@ -397,6 +397,7 @@ This tool is for testing purposes, it preprocess the document and uses **AnyStyl
 - **Conquer the world!** 🌍
 
 <p style="background:white">
+    <img src="assets/doc/partners/logo-um.png" width="200"> 
      <img src="doc/partners/logo-ministerio.svg" width="200">
       <img src="doc/partners/logo-fecyt.svg" width="200">
        <img src="doc/partners/convocatoria-mdg.svg" width="200">
