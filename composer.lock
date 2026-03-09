@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e67b9a37b9f1b80c72647593abc62616",
+    "content-hash": "7cf5ecb4cd7e2604880261a05a4eda2f",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -162,8 +162,8 @@
             "version": "dev-scielo",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/ticarum/docxtojats.git",
-                "reference": "70c001e953a45cf8e888c2b79475a9c1dbde28ff"
+                "url": "https://github.com/editum/docxtojats.git",
+                "reference": "304338f631fb4c915052acae28960958f9e4e254"
             },
             "require": {
                 "citation-style-language/locales": "@dev",
@@ -191,7 +191,7 @@
                 }
             ],
             "description": "DOCX to JATS XML converter",
-            "time": "2025-11-22T15:34:17+00:00"
+            "time": "2026-03-09T17:43:37+00:00"
         },
         {
             "name": "doctrine/annotations",

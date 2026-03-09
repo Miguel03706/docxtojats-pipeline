@@ -6,7 +6,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://bitbucket.org/ticarum/docxtojats.git"
+            "url": "https://github.com/editum/docxtojats.git"
         }
     ],
     "require": {
