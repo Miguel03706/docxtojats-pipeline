@@ -1,0 +1,69 @@
+Passo a passo real para rodar esse lixo
+
+instalar o XAMMP ou WAMMP
+baixar php 7.3 (dentro de algum deles e renomear a pasta apenas para "php")
+ex - C:\xampp\php
+
+Depois, tem que entrar nessa pasta > achar o "php.ini"
+buscar "extension=intl" -> descomentar (tirar o ";")
+buscar "extension_dir = "ext" -> descomentar
+buscar "extension=openssl" -> descomentar
+
+baixar o composer (apontar ele pra pasta "php") -> Provavelmente vai ter q reiniciar a máquina
+(verificar se ele foi adicionado ao "path") -> https://www.youtube.com/watch?v=ORmhRph6ChM
+
+
+terminal: composer install
+
+alterar o .env para ter esse trecho (ele já está la mas está vazio): 
+ANONIMIZER_URL=http://localhost:8000/doc/anonymizer
+NORMALIZER_URL=http://localhost:8000/doc/normalizer
+DOCTOJATS_URL=http://localhost:8000/doc/tojats
+JATSPUBLISHER_URL=http://localhost:8000/doc/jatsPublisher
+
+terminal: composer dump-env prod
+terminal: docker-compose up -d --build
+
+Depois disso tudo, você vai começar a executar as coisas pelo docker (eu usei o termial do proprio vscode)
+
+terminal: docker exec -it docxtojats-pipeline-doc2jats-pipeline-1 bash
+(com isso, vc vai estar no linux)
+
+terminal: wget https://get.symfony.com/cli/installer -O - | bash
+terminal: symfony server:start --port=80 --allow-all-ip
+
+isso vai iniciar o servidor online na porta 127.0.0.1:8000
+
+
+----------------------------------------------------------------------------------------------------
+Páginas disponiveis:
+
+ -------------------------------------- -------- -------- ------ ----------------------------------- 
+  Name                                   Method   Scheme   Host   Path
+ -------------------------------------- -------- -------- ------ -----------------------------------
+  app_document_converter_status          ANY      ANY      ANY    /doc/
+  app_document_converter_anonymizer      ANY      ANY      ANY    /doc/anonymizer
+  app_document_converter_normalizer      ANY      ANY      ANY    /doc/normalizer
+  app_document_converter_tojats          ANY      ANY      ANY    /doc/tojats     .................. Esse era o que eu estava usando
+  app_document_converter_jatsPublisher   ANY      ANY      ANY    /doc/jatsPublisher 
+  _preview_error                         ANY      ANY      ANY    /_error/{code}.{_format}
+  _wdt                                   ANY      ANY      ANY    /_wdt/{token}
+  _profiler_home                         ANY      ANY      ANY    /_profiler/
+  _profiler_search                       ANY      ANY      ANY    /_profiler/search
+  _profiler_search_bar                   ANY      ANY      ANY    /_profiler/search_bar
+  _profiler_phpinfo                      ANY      ANY      ANY    /_profiler/phpinfo
+  _profiler_search_results               ANY      ANY      ANY    /_profiler/{token}/search/results
+  _profiler_open_file                    ANY      ANY      ANY    /_profiler/open
+  _profiler                              ANY      ANY      ANY    /_profiler/{token}
+  _profiler_router                       ANY      ANY      ANY    /_profiler/{token}/router
+  _profiler_exception                    ANY      ANY      ANY    /_profiler/{token}/exception
+  _profiler_exception_css                ANY      ANY      ANY    /_profiler/{token}/exception.css
+ -------------------------------------- -------- -------- ------ -----------------------------------
+
+
+Para converter:
+- Mandar o arquivo em docx
+- Ativar normalização (achei q ajuda)
+- Enviar o xml do Front
+
+- Converter
