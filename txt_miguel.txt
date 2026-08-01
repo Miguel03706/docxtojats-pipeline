@@ -24,6 +24,12 @@ JATSPUBLISHER_URL=http://localhost:8000/doc/jatsPublisher
 terminal: composer dump-env prod
 terminal: docker-compose up -d --build
 
+-
+Se o arquivo entrypoint.sh foi criado/editado no Windows (VS Code, Git, etc.), 
+ele pode ter finais de linha \r\n (CRLF). 
+Quando o Linux tenta interpretar a primeira linha (#!/bin/bash\r), 
+ele não reconhece o interpretador porque o \r "quebra" o shebang 
+-
 Depois disso tudo, você vai começar a executar as coisas pelo docker (eu usei o termial do proprio vscode)
 
 terminal: docker exec -it docxtojats-pipeline-doc2jats-pipeline-1 bash
