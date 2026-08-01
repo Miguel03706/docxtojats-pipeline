@@ -21,10 +21,11 @@ services:
       - 8000:80
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
     tty: true
     working_dir: /opt/doc2jats-pipeline
     volumes:
       - ./:/opt/doc2jats-pipeline
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    command: symfony server:start --port=80 --allow-all-ip --no-tls
