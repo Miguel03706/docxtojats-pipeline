@@ -18,7 +18,7 @@ services:
         memory_limit=5120M      
         max_execution_time=600
     ports:
-      - 8000:80
+      - "8000:80"
     env_file:
       - .env
     restart: always
@@ -28,4 +28,5 @@ services:
       - ./:/opt/doc2jats-pipeline
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: symfony server:start --port=80 --allow-all-ip --no-tls
+    # Mudança: 'serve' no lugar de 'server:start' e porta 8000
+    #command: symfony serve --port=8000 --allow-all-ip --no-tls
