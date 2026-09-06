@@ -1,10 +1,15 @@
 FROM php:7.4-apache-bullseye
 
 # -----------------------------
-# Instalación paquetes base (snapshot + backports)
+# Instalación paquetes base
 # -----------------------------
-ARG UPDATE_IMAGE=1
-ARG BACKPORTS_URL=http://archive.debian.org/debian
+ARG UPDATE_IMAGE=0
+ARG APP_ENV
+ARG APP_NAME
+ARG PUSER=www-data
+ARG PGROUP=www-data
+ARG PUID
+ARG PGID
 
 # Instalar composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -13,32 +18,30 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN set -eux; \
     export DEBIAN_FRONTEND=noninteractive; \
     . /etc/os-release; \
-    # ⚙️ Activar backports si está habilitado
-    if [ -n "${BACKPORTS_URL}" ] && [ -n "${VERSION_CODENAME}" ]; then \
-        echo "deb ${BACKPORTS_URL} ${VERSION_CODENAME}-backports main" > /etc/apt/sources.list.d/backports.list; \
-    fi; \
-    # 🔄 Actualizar paquetes base si está habilitado
-    if [ "$UPDATE_IMAGE" = "1" ] || [ "$UPDATE_IMAGE" = "true" ]; then \
-        echo "🔄 Actualizando base ($VERSION_CODENAME)..."; \
-        apt-get update -o Acquire::Check-Valid-Until=false && \
-        apt-get dist-upgrade -y; \
-    fi; \
-    # 📦 Instalar dependencias necesarias
-    echo "📦 Instalando dependencias..."; \
-    if ! command -v curl > /dev/null; then \
-        apt-get update -o Acquire::Check-Valid-Until=false && apt-get install -y curl; \
-    fi; \
+    # 1️⃣ Limpar qualquer cache quebrado que veio na imagem base do PHP
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*; \
+    # 2️⃣ CONGELANDO OS REPOSITÓRIOS: Usar apenas a base estável. Removemos o security.debian.org que está quebrado.
+    echo "deb http://deb.debian.org/debian bullseye main contrib non-free" > /etc/apt/sources.list; \
+    echo "deb http://archive.debian.org/debian bullseye-backports main contrib non-free" >> /etc/apt/sources.list; \
+    # 3️⃣ Fazer o update do zero na lista congelada
+    apt-get update -o Acquire::Check-Valid-Until=false; \
+    # 4️⃣ Instalar dependências críticas primeiro
+    echo "📦 Instalando dependencias criticas..."; \
+    apt-get install -y --no-install-recommends curl gnupg ca-certificates apt-transport-https; \
+    # 5️⃣ Script do Symfony
     curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash; \
-    apt-get update -o Acquire::Check-Valid-Until=false && \
+    # 6️⃣ Instalar o resto das ferramentas
+    apt-get update -o Acquire::Check-Valid-Until=false; \
     apt-get install -y --no-install-recommends \
-        apt-utils apt-transport-https \
-        gosu rsync git zip unzip cron locales gnupg \
-        vim less wget curl jq memcached \
+        apt-utils \
+        gosu rsync git zip unzip cron locales \
+        vim less wget jq memcached \
         libzip-dev libicu-dev libxml2-dev libpng-dev libldap2-dev \
         libjpeg-dev libfreetype6-dev libonig-dev libcurl4-openssl-dev \
         libmemcached-dev zlib1g-dev \
         symfony-cli; \
-    # 🧹 Limpiar caché de APT
+    # 🧹 Limpar cache no final para reduzir tamanho da imagem
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------
@@ -95,7 +98,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
 #   📚 AnyStyle
 #   ⚙️ Saxon HE jar
 #   ⚙️ XMLCalabash (xproc)
-#   🖨️ wkhtmltopdf (the version included with apt does not support html header and footer)
+#   🖨️ wkhtmltopdf
 #   📙 vivliostyle (conversion from html to pdf)
 # -----------------------------
 ARG SAXON_VERSION=12.7
@@ -178,13 +181,6 @@ RUN apt-get update && apt-get install -y \
 # -----------------------------
 # Setup
 # -----------------------------
-ARG APP_ENV
-ARG APP_NAME
-ARG PUSER=www-data
-ARG PGROUP=www-data
-ARG PUID
-ARG PGID
-
 ENV APP_ENV=$APP_ENV
 ENV APP_NAME=$APP_NAME
 ENV PUSER=$PUSER
